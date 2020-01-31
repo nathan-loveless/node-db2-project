@@ -3,26 +3,24 @@ const db = require('../data/db-config');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    db('cars')
-    .then(cars => {
-      res.json(cars); 
-    })
-    .catch (err => {
-      res.status(500).json({ message: 'Failed to retrieve car inventory' });
-    });
+router.get('/', async (req, res) => {
+    try {
+        const cars = await db('cars');
+        db('cars')
+        res.status(200).json(cars);
+    } catch(err) {
+        res.status(500).json({ message: 'Failed to retrieve car inventory' });
+    }
   });
 
-  router.get('/:id', (req, res) => {
+  router.get('/:id',  async (req, res) => {
     const {id} = req.params;
-  
-    db('cars').where('id', id)
-    .then(car => {
-      res.json(car);
-    }) 
-    .catch (err => {
-      res.status(500).json({ message: 'Failed to retrieve selected car' });
-    });
+    try {
+        const car = await db('cars').where('id', id);
+        res.status(200).json(car);
+    } catch(err) {
+        res.status(500).json({ message: 'Failed to retrieve selected car' });
+    }
   });
 
   router.post('/', async (req, res) => {
@@ -33,6 +31,27 @@ router.get('/', (req, res) => {
     } catch {
         res.status(500).json({message: 'Failed to insert car'});
     }
+});
+
+router.put('/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const updateRow = await db('cars').where('id', id).update(req.body);
+        res.status(200).json({updated: updateRow});
+    } catch {
+        res.status(500).json({message: 'Failed to update car'});
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    const {id} = req.params
+    try {
+        const deleteRow = await db('cars').where('id', id).del();
+        res.json({deletedRecords: deleteRow})
+    }
+    catch {
+        res.status(500).json({message: "Failded to delete car"});
+    }    
 });
 
 
