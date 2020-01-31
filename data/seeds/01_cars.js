@@ -12,11 +12,3 @@ exports.seed = function(knex) {
       ]);
     });
 };
-
-// tbl.increments();
-// tbl.text('vin', 64).unique().notNullable();
-// tbl.text('make', 64).notNullable();
-// tbl.text('model', 64).notNullable();
-// tbl.decimal('mileage').notNullable();
-// tbl.text('transmission');
-// tbl.text('titleStatus');
